@@ -1,18 +1,61 @@
+import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 /**
  * Created by JoseMiguel on 06/04/2015.
  */
 public class MainForm extends JFrame{
-    private JList list1;
-    private JPanel panel1;
+    private JPanel mainPanel;
+    private JTable torrentTable;
+    private JTextArea searchText;
+    private JButton searchButton;
+    private ArrayList<Torrent> torrentList;
 
-    public MainForm(String[] listModel){
+    public MainForm(){
         super("JStrike");
-        list1.setListData(listModel);
+        torrentList = new ArrayList<>();
+
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Title");
+        model.addColumn("Category");
+        model.addColumn("Size");
+        model.addColumn("Seeds");
+        model.addColumn("Leeches");
+        model.addColumn("Hash");
 
 
-        setContentPane(panel1);
+
+        torrentTable.setModel(model);
+
+        ListSelectionModel listSelectionModel = torrentTable.getSelectionModel();
+        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        listSelectionModel.addListSelectionListener(e -> System.out.println(torrentList.get(torrentTable.getSelectedRow()).getName()));
+
+        searchButton.addActionListener(e -> {
+
+            torrentList.clear();
+            model.getDataVector().removeAllElements();
+            HttpsURLConnection connection = Connection.connect(searchText.getText());
+            torrentList = JSONParser.parse(connection);
+
+            if (torrentList != null) {
+                for (Torrent torrent: torrentList)
+                    model.addRow(new Object[]{torrent.getName(), torrent.getCategory(), torrent.getParsedSize(), torrent.getSeeds(), torrent.getLeeches(), torrent.getHash()});
+            }
+            mainPanel.repaint();
+        });
+
+
+        setContentPane(mainPanel);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

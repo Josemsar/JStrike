@@ -24,7 +24,8 @@ public class JSONParser {
 
             for (int i = 0; i < jsonArray.length(); ++i){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Torrent torrent = new Torrent(jsonObject.getString("torrent_title"),
+                Torrent torrent = new Torrent(
+                        jsonObject.getString("torrent_title"),
                         jsonObject.getString("torrent_category"),
                         jsonObject.getString("torrent_hash"),
                         jsonObject.getString("magnet_uri"),

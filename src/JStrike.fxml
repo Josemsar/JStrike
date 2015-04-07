@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JStrikeController">
+   <children>
+      <TabPane fx:id="tabPanel" layoutY="27.0" prefHeight="574.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Search Torrents">
+            <content>
+              <AnchorPane fx:id="mainPanel" minHeight="0.0" minWidth="0.0" prefHeight="336.0" prefWidth="800.0">
+                     <children>
+                        <TextArea fx:id="searchTextArea" layoutX="14.0" layoutY="5.0" maxHeight="33.0" maxWidth="682.0" prefHeight="25.0" prefWidth="682.0" />
+                        <Button fx:id="searchButton" layoutX="713.0" layoutY="5.0" mnemonicParsing="false" onAction="#searchButtonListener" text="Search" />
+                        <ProgressBar fx:id="searchProgressBar" layoutX="586.0" layoutY="522.0" prefWidth="200.0" progress="0.0" />
+                        <TableView fx:id="torrentTable" editable="true" layoutY="59.0" onMouseClicked="#rowSelectListener" prefHeight="457.0" prefWidth="800.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Downloads">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="800.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>

@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
  * Created by JoseMiguel on 06/04/2015.
  */
 public class Torrent {
-    private String name;
+    private String title;
     private String category;
     private String hash;
     private String magnet;
@@ -15,8 +15,8 @@ public class Torrent {
     private int leeches;
     private double size;
 
-    public Torrent(String name, String category, String hash, String magnet, int seeds, int leeches, double size) {
-        this.name = name;
+    public Torrent(String title, String category, String hash, String magnet, int seeds, int leeches, double size) {
+        this.title = title;
         this.category = category;
         this.hash = hash;
         this.magnet = magnet;
@@ -25,9 +25,8 @@ public class Torrent {
         this.size = size;
     }
 
-    public String getName() {
-
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getCategory() {
@@ -46,7 +45,7 @@ public class Torrent {
         return leeches;
     }
 
-    public String getParsedSize (){
+    public String getSize(){
         if (size / Math.pow(1024, 2) < 1024)
             return String.format("%.2f MB", (size / Math.pow(1024, 2)));
         return String.format("%.2f GB", (size / Math.pow(1024, 3)));

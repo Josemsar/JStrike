@@ -27,6 +27,7 @@ public class JSONParser {
                 Torrent torrent = new Torrent(jsonObject.getString("torrent_title"),
                         jsonObject.getString("torrent_category"),
                         jsonObject.getString("torrent_hash"),
+                        jsonObject.getString("magnet_uri"),
                         jsonObject.getInt("seeds"),
                         jsonObject.getInt("leeches"),
                         jsonObject.getDouble("size")

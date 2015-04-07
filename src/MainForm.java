@@ -1,8 +1,6 @@
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,11 +16,17 @@ public class MainForm extends JFrame {
     private JTextArea searchText;
     private JButton searchButton;
     private JTabbedPane tabPanel;
-    private ArrayList<Torrent> torrentList;
+    private JProgressBar searchProgressBar;
+    private DefaultTableModel model;
+
 
     public MainForm() {
         super("JStrike");
-        torrentList = new ArrayList<>();
+        TorrentHandler torrentHandler = new TorrentHandler();
+        model = new DefaultTableModel();
+
+        searchProgressBar.setValue(50);
+        setSize(1000, 1000);
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -30,7 +34,6 @@ public class MainForm extends JFrame {
             e.printStackTrace();
         }
 
-        DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Title");
         model.addColumn("Category");
         model.addColumn("Size");
@@ -41,39 +44,18 @@ public class MainForm extends JFrame {
 
         torrentTable.setModel(model);
 
-        ListSelectionModel listSelectionModel = torrentTable.getSelectionModel();
-        listSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        listSelectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-
-                if (!e.getValueIsAdjusting())
-                    torrentList.get(torrentTable.getSelectedRow()).callMagnet();
-                    //System.out.println(torrentList.get(torrentTable.getSelectedRow()).getName());
-
-            }
+        torrentTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting())
+                torrentHandler.callMagnet(torrentTable.getSelectedRow());
         });
 
         searchButton.addActionListener(e -> {
-
-            torrentList.clear();
-            model.getDataVector().removeAllElements();
-            HttpsURLConnection connection = Connection.connect(searchText.getText());
-
-            torrentList = JSONParser.parse(connection);
-
-            if (torrentList != null) {
-                for (Torrent torrent : torrentList)
-                    model.addRow(new Object[]{torrent.getName(), torrent.getCategory(), torrent.getParsedSize(), torrent.getSeeds(), torrent.getLeeches(), torrent.getHash()});
-            }
-            mainPanel.repaint();
+            new Thread(torrentHandler).start();
         });
 
         searchText.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
 
             @Override
@@ -83,35 +65,53 @@ public class MainForm extends JFrame {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    torrentList.clear();
-                    model.getDataVector().removeAllElements();
-                    HttpsURLConnection connection = Connection.connect(searchText.getText());
-
-                    torrentList = JSONParser.parse(connection);
-
-                    if (torrentList != null) {
-                        for (Torrent torrent : torrentList)
-                            model.addRow(new Object[]{torrent.getName(), torrent.getCategory(), torrent.getParsedSize(), torrent.getSeeds(), torrent.getLeeches(), torrent.getHash()});
-                    }
-                    mainPanel.repaint();
-                }
-
+                if (e.getKeyChar() == KeyEvent.VK_ENTER)
+                    new Thread(torrentHandler).start();
             }
         });
-
 
         setContentPane(mainPanel);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setVisible(true);
-
-        class SearchTorrents{
-            public void searchTorrents (){
-
-            }
-        }
     }
 
+    class TorrentHandler implements Runnable{
+        private ArrayList<Torrent> torrentList;
+
+        public TorrentHandler() {
+            torrentList = new ArrayList<>();
+        }
+
+        void searchTorrents() {
+            HttpsURLConnection connection = Connection.connect(searchText.getText());
+            torrentList = JSONParser.parse(connection);
+        }
+
+        void updateTableResults() {
+            torrentList.clear();
+            model.getDataVector().removeAllElements();
+            searchTorrents();
+
+            if (torrentList != null) {
+                for (Torrent torrent : torrentList)
+                    model.addRow(new Object[]{torrent.getName(), torrent.getCategory(), torrent.getParsedSize(), torrent.getSeeds(), torrent.getLeeches(), torrent.getHash()});
+
+                mainPanel.repaint();
+            }
+
+        }
+
+        void callMagnet(int selectedTorrent) {
+            torrentList.get(selectedTorrent).callMagnet();
+        }
+
+        @Override
+        public void run() {
+            updateTableResults();
+        }
+    }
 }
+
+

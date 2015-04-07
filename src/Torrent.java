@@ -50,15 +50,12 @@ public class Torrent {
         if (size / Math.pow(1024, 2) < 1024)
             return String.format("%.2f MB", (size / Math.pow(1024, 2)));
         return String.format("%.2f GB", (size / Math.pow(1024, 3)));
-
     }
 
     public void callMagnet (){
         try {
             Desktop.getDesktop().browse(new URI(magnet));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }

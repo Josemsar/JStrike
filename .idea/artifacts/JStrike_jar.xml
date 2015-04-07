@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JStrike:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JStrike_jar</output-path>
+    <root id="archive" name="JStrike.jar">
+      <element id="module-output" name="JStrike" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20140107.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

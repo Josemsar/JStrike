@@ -45,13 +45,13 @@ public class Torrent {
         return leeches;
     }
 
-    public String getSize(){
+    public String getSize() {
         if (size / Math.pow(1024, 2) < 1024)
             return String.format("%.2f MB", (size / Math.pow(1024, 2)));
         return String.format("%.2f GB", (size / Math.pow(1024, 3)));
     }
 
-    public void callMagnet (){
+    public void callMagnet() {
         try {
             Desktop.getDesktop().browse(new URI(magnet));
         } catch (IOException | URISyntaxException e) {

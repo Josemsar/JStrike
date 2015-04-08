@@ -19,7 +19,7 @@ public class JStrikeController {
     private TextArea searchTextArea;
 
     @FXML
-    private TableView torrentTable;
+    private TableView<Torrent> torrentTable;
 
     @FXML
     private ProgressBar searchProgressBar;
@@ -27,36 +27,36 @@ public class JStrikeController {
     private ObservableList<Torrent> torrentData;
 
 
-    public JStrikeController(){
+    public JStrikeController() {
         torrentData = FXCollections.observableArrayList();
     }
 
 
     @FXML
-    private void initialize(){
+    private void initialize() {
 
-        TableColumn titleColumn = new TableColumn("Title");
-        titleColumn.setCellValueFactory(new PropertyValueFactory("title"));
+        TableColumn<Torrent, Object> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         titleColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
-        TableColumn categoryColumn = new TableColumn("Category");
-        categoryColumn.setCellValueFactory(new PropertyValueFactory("category"));
+        TableColumn<Torrent, Object> categoryColumn = new TableColumn<>("Category");
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         categoryColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
-        TableColumn sizeColumn = new TableColumn("Size");
-        sizeColumn.setCellValueFactory(new PropertyValueFactory("size"));
+        TableColumn<Torrent, Object> sizeColumn = new TableColumn<>("Size");
+        sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
         sizeColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
-        TableColumn seedsColumn = new TableColumn("Seeds");
-        seedsColumn.setCellValueFactory(new PropertyValueFactory("seeds"));
+        TableColumn<Torrent, Object> seedsColumn = new TableColumn<>("Seeds");
+        seedsColumn.setCellValueFactory(new PropertyValueFactory<>("seeds"));
         seedsColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
-        TableColumn leechesColumn = new TableColumn("Leeches");
-        leechesColumn.setCellValueFactory(new PropertyValueFactory("leeches"));
+        TableColumn<Torrent, Object> leechesColumn = new TableColumn<>("Leeches");
+        leechesColumn.setCellValueFactory(new PropertyValueFactory<>("leeches"));
         leechesColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
-        TableColumn hashColumn = new TableColumn("Hash");
-        hashColumn.setCellValueFactory(new PropertyValueFactory("hash"));
+        TableColumn<Torrent, Object> hashColumn = new TableColumn<>("Hash");
+        hashColumn.setCellValueFactory(new PropertyValueFactory<>("hash"));
         hashColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
 
         torrentTable.getColumns().addAll(titleColumn,
@@ -69,23 +69,24 @@ public class JStrikeController {
 
         torrentTable.setItems(torrentData);
 
+        torrentTable.setPlaceholder(new Label(""));
+
 
     }
 
     @FXML
-    public void searchButtonListener () {
-        // Button was clicked, do something...
-        //System.out.println("TEST");
+    public void searchButtonListener() {
         new Thread(new TorrentHandler()).start();
-        System.out.println("TEST");
     }
 
     @FXML
-    public void rowSelectListener () {
-       ((Torrent) torrentTable.getSelectionModel().getSelectedItem()).callMagnet();
+    public void rowSelectListener() {
+
+        if (torrentTable.getSelectionModel().getSelectedItem() != null)
+            (torrentTable.getSelectionModel().getSelectedItem()).callMagnet();
     }
 
-    class TorrentHandler implements Runnable{
+    class TorrentHandler implements Runnable {
         private ArrayList<Torrent> torrentList;
 
         public TorrentHandler() {
@@ -93,8 +94,10 @@ public class JStrikeController {
         }
 
         void searchTorrents() {
-            HttpsURLConnection connection = Connection.connect(searchTextArea.getText());
-            torrentList = JSONParser.parse(connection);
+            if (!searchTextArea.getText().isEmpty()) {
+                HttpsURLConnection connection = Connection.connect(searchTextArea.getText());
+                torrentList = JSONParser.parse(connection);
+            }
         }
 
         void updateTableResults() {
@@ -109,14 +112,9 @@ public class JStrikeController {
             torrentData.clear();
 
             searchProgressBar.setProgress(.75);
-            if (torrentList != null) {
+            if (torrentList != null)
                 torrentData.addAll(torrentList);
-                   // model.addRow(new Object[]{torrent.getTitle(), torrent.getCategory(), torrent.getSize(), torrent.getSeeds(), torrent.getLeeches(), torrent.getHash()});
 
-
-
-               // mainPanel.repaint();
-            }
             searchProgressBar.setProgress(1);
         }
 

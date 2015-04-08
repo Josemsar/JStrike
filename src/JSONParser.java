@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class JSONParser {
 
-    public static ArrayList<Torrent> parse(HttpsURLConnection connection){
+    public static ArrayList<Torrent> parse(HttpsURLConnection connection) {
         ArrayList<Torrent> torrents = new ArrayList<>();
         String inputLine;
 
@@ -22,7 +22,7 @@ public class JSONParser {
             inputLine = inputData.readLine();
             JSONArray jsonArray = new JSONArray(inputLine.substring(inputLine.indexOf("[")));
 
-            for (int i = 0; i < jsonArray.length(); ++i){
+            for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Torrent torrent = new Torrent(
                         jsonObject.getString("torrent_title"),
@@ -42,6 +42,6 @@ public class JSONParser {
             e.printStackTrace();
         }
 
-    return null;
+        return null;
     }
 }

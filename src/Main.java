@@ -1,7 +1,7 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -22,11 +22,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("JStrike.fxml"));
-            AnchorPane pane = loader.load();
-            Scene scene = new Scene(pane);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("JStrike.fxml"));
+        GridPane pane = loader.load();
+        Scene scene = new Scene(pane);
+        primaryStage.setMaxHeight(600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
+}
 

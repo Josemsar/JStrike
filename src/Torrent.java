@@ -11,15 +11,17 @@ public class Torrent {
     private String category;
     private String hash;
     private String magnet;
+    private String date;
     private int seeds;
     private int leeches;
     private double size;
 
-    public Torrent(String title, String category, String hash, String magnet, int seeds, int leeches, double size) {
+    public Torrent(String title, String category, String hash, String magnet, String date, int seeds, int leeches, double size) {
         this.title = title;
         this.category = category;
         this.hash = hash;
         this.magnet = magnet;
+        this.date = date;
         this.seeds = seeds;
         this.leeches = leeches;
         this.size = size;
@@ -35,6 +37,10 @@ public class Torrent {
 
     public String getHash() {
         return hash;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public int getSeeds() {

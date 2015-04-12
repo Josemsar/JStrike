@@ -25,7 +25,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("JStrike.fxml"));
         GridPane pane = loader.load();
         Scene scene = new Scene(pane);
-        primaryStage.setMaxHeight(600);
+        primaryStage.setTitle("JStrike");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

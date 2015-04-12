@@ -1,8 +1,11 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.util.ArrayList;
@@ -35,35 +38,50 @@ public class JStrikeController {
     @FXML
     private void initialize() {
 
+        searchTextArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals((KeyCode.ENTER))){
+                        searchTextArea.setMaxSize( searchTextArea.getPrefWidth(), searchTextArea.getPrefHeight());
+                    new Thread(new TorrentHandler()).start();
+                }
+            }
+        });
+
         TableColumn<Torrent, Object> titleColumn = new TableColumn<>("Title");
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        titleColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        titleColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         TableColumn<Torrent, Object> categoryColumn = new TableColumn<>("Category");
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        categoryColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        categoryColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         TableColumn<Torrent, Object> sizeColumn = new TableColumn<>("Size");
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
-        sizeColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        sizeColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         TableColumn<Torrent, Object> seedsColumn = new TableColumn<>("Seeds");
         seedsColumn.setCellValueFactory(new PropertyValueFactory<>("seeds"));
-        seedsColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        seedsColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         TableColumn<Torrent, Object> leechesColumn = new TableColumn<>("Leeches");
         leechesColumn.setCellValueFactory(new PropertyValueFactory<>("leeches"));
-        leechesColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        leechesColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
+
+        TableColumn<Torrent, Object> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dateColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         TableColumn<Torrent, Object> hashColumn = new TableColumn<>("Hash");
         hashColumn.setCellValueFactory(new PropertyValueFactory<>("hash"));
-        hashColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(6));
+        hashColumn.prefWidthProperty().bind(torrentTable.widthProperty().divide(7));
 
         torrentTable.getColumns().addAll(titleColumn,
                 categoryColumn,
                 sizeColumn,
                 seedsColumn,
                 leechesColumn,
+                dateColumn,
                 hashColumn);
 
 
@@ -86,6 +104,9 @@ public class JStrikeController {
             (torrentTable.getSelectionModel().getSelectedItem()).callMagnet();
     }
 
+
+
+
     class TorrentHandler implements Runnable {
         private ArrayList<Torrent> torrentList;
 
@@ -97,6 +118,9 @@ public class JStrikeController {
             if (!searchTextArea.getText().isEmpty()) {
                 HttpsURLConnection connection = Connection.connect(searchTextArea.getText());
                 torrentList = JSONParser.parse(connection);
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }
 

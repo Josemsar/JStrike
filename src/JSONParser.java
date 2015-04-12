@@ -29,6 +29,7 @@ public class JSONParser {
                         jsonObject.getString("torrent_category"),
                         jsonObject.getString("torrent_hash"),
                         jsonObject.getString("magnet_uri"),
+                        jsonObject.getString("upload_date"),
                         jsonObject.getInt("seeds"),
                         jsonObject.getInt("leeches"),
                         jsonObject.getDouble("size")
